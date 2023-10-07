@@ -18,8 +18,8 @@ fn main() -> io::Result<()> {
     }
 
     // Parse the DICOM header
-    let path = &args[1];
-    let dicom_data = parse_dicom_header(path)?;
+    let path: &String = &args[1];
+    let dicom_data: HashMap<String, serde_json::Value> = parse_dicom_header(path)?;
 
     // Print the parsed data in JSON format
     println!("{}", serde_json::to_string(&dicom_data)?);
@@ -57,16 +57,16 @@ fn parse_dicom_header(file_path: &str) -> io::Result<HashMap<String, serde_json:
         }
 
         // Convert the first two bytes and the next two bytes of the tag into their respective group and element
-        let group = u16::from_le_bytes([tag_bytes[0], tag_bytes[1]]);
-        let element = u16::from_le_bytes([tag_bytes[2], tag_bytes[3]]);
+        let group: u16 = u16::from_le_bytes([tag_bytes[0], tag_bytes[1]]);
+        let element: u16 = u16::from_le_bytes([tag_bytes[2], tag_bytes[3]]);
 
         // Format the group and element as a DICOM tag string
-        let tag = format!("{:04X}{:04X}", group, element);
+        let tag: String = format!("{:04X}{:04X}", group, element);
 
         // Read the next 2 bytes as the Value Representation (VR) of the tag
         let mut vr_bytes: [u8; 2] = [0; 2];
         file.read(&mut vr_bytes)?;
-        let vr = String::from_utf8_lossy(&vr_bytes).to_string();
+        let vr: String = String::from_utf8_lossy(&vr_bytes).to_string();
 
         // Determine the length of the data associated with the tag.
         // DICOM has two types of lengths based on the VR.
@@ -85,13 +85,13 @@ fn parse_dicom_header(file_path: &str) -> io::Result<HashMap<String, serde_json:
         }
 
         // Read the data associated with the tag based on the determined length
-        let mut value_bytes = vec![0u8; length];
+        let mut value_bytes: Vec<u8> = vec![0u8; length];
         if file.read(&mut value_bytes)? != length {
             break; // Exit loop if we can't read the expected number of bytes for the value
         }
 
         // Convert the data bytes into a string
-        let value = String::from_utf8_lossy(&value_bytes).to_string();
+        let value: String = String::from_utf8_lossy(&value_bytes).to_string();
 
         // Store the tag, VR, and value in a HashMap
         let mut tag_data: HashMap<String, serde_json::Value> = HashMap::new();
