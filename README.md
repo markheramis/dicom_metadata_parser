@@ -5,6 +5,9 @@ This tool allows users to parse DICOM (Digital Imaging and Communications in Med
 ### Why another tool?
 This project serves as an experimentation with Rust and Dicoms.
 
+### It uses
+- 
+
 ## Features
 - Extracts DICOM tags and their associated values.
 - Outputs metadata in a structured JSON format.
@@ -17,8 +20,8 @@ Rust: Make sure you have the Rust programming language and its package manager, 
 
 1. Clone this repository:
     ```
-    git clone <repository-url>
-    cd <repository-directory>
+    git clone git@github.com:markheramis/dicom_metadata_parser.git
+    cd dicom_metadata_parser
     ```
 2. Build the tool:
     ```
